@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
+require('dotenv').config(); // 加載環境變數
 
 mongoose.set('strictQuery', false); // 或 true
 
-// 替換為您的 MongoDB 連接字符串
-const mongoURI = 'mongodb+srv://zywei097:BFiolrXvvk3JMExn@test-web-db.ma336.mongodb.net/?retryWrites=true&w=majority&appName=test-web-db';
+// 使用環境變數來設置 MongoDB 連接字符串
+const mongoURI = process.env.MONGODB_URI;
 
-// 使用一個標誌來檢查是否已經連接
 let isConnected = false;
 
 const connectDB = async () => {
@@ -16,7 +16,7 @@ const connectDB = async () => {
         isConnected = true; // 更新連接狀態
         console.log('MongoDB connected successfully');
     } catch (err) {
-        console.error('Could not connect to MongoDB:', err);
+        console.error('Could not connect to MongoDB:', err.message);
     }
 };
 
