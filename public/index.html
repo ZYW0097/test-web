@@ -1,0 +1,21 @@
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>訂位系統</title>
+</head>
+<body>
+  <h1>訂位系統</h1>
+  <form id="bookingForm">
+    <label for="name">姓名:</label>
+    <input type="text" id="name" name="name" required>
+    <label for="phone">電話:</label>
+    <input type="text" id="phone" name="phone" required>
+    <label for="time">訂位時間:</label>
+    <input type="datetime-local" id="time" name="time" required>
+    <button type="submit">提交</button>
+  </form>
+</body>
+<script src="script.js"></script>
+</html>
