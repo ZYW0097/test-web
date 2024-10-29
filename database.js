@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // 替換為您的 MongoDB 連接字符串
-const mongoURI = 'mongodb+srv://zywei097:<db_password>@test-web-db.ma336.mongodb.net/?retryWrites=true&w=majority&appName=test-web-db';
+const mongoURI = 'mongodb+srv://zywei097:BFiolrXvvk3JMExn@test-web-db.ma336.mongodb.net/?retryWrites=true&w=majority&appName=test-web-db';
 
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Connected to MongoDB.'))
