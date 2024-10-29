@@ -1,29 +1,12 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose'); // 引入 mongoose
-const Booking = require('./database'); // 引入 MongoDB 模型
+const { connectDB, Booking } = require('./database'); // 引入連接和 Booking 模型
+
 const app = express();
 const port = process.env.PORT || 3000;
 
-// 使用 MongoDB Atlas 的連接字符串
-const mongoDB = 'mongodb+srv://zywei097:BFiolrXvvk3JMExn@test-web-db.ma336.mongodb.net/?retryWrites=true&w=majority&appName=test-web-db';
-
-let isConnected = false;
-
-const connectDB = async () => {
-    if (isConnected) return; // 如果已經連接，則不重複連接
-
-    try {
-        await mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-        isConnected = true; // 更新連接狀態
-        console.log('Connected to MongoDB');
-    } catch (err) {
-        console.error('Could not connect to MongoDB:', err);
-    }
-};
-
-// 連接到 MongoDB
+// 在應用程序啟動時連接到 MongoDB
 connectDB();
 
 // 中介軟體設定
@@ -34,6 +17,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // 新增訂位
 app.post('/book', (req, res) => {
     const { name, phone, time, adults, children, childChairs } = req.body;
+
+    // 驗證資料
+    if (childChairs > children && children > 0) {
+        return res.status(400).json({ error: '兒童椅數量不能大於小孩數量' });
+    }
+    if (childChairs > 0 && (!children || children <= 0)) {
+        return res.status(400).json({ error: '如果有兒童椅，必須填寫小孩數量' });
+    }
+
     const newBooking = new Booking({ name, phone, time, adults, children, childChairs });
 
     newBooking.save()
