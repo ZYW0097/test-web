@@ -15,38 +15,27 @@
   <form id="bookingForm">
     <label for="name">姓名:</label>
     <input type="text" id="name" name="name" required>
-    
     <label for="phone">電話:</label>
     <input type="text" id="phone" name="phone" required
-           pattern="^(09\d{2}-\d{6}|0\d{2}-\d{7}|0\d{1}-\d{8})$"
-           title="請輸入有效的台灣電話號碼格式，例如：09XX-XXXXXX 或 0XX-XXXXXXX">
-    
-    <label for="adults">大人數:</label>
-    <input type="number" id="adults" name="adults" min="1" value="1" required>
-    
-    <label for="children">小孩數:</label>
-    <input type="number" id="children" name="children" min="0" value="0" required onchange="toggleChildChair()">
-    
-    <div id="childChairContainer">
-      <label for="childChairs">兒童椅數量:</label>
-      <input type="number" id="childChairs" name="childChairs" min="0" value="0">
-    </div>
-    
+           pattern="^(09\d{2}|0\d{2}|0\d{1})?\d{7}$"
+           title="請輸入有效的台灣電話號碼格式，例如：09XXXXXXX 或 0XXYYYYYYY">
     <label for="time">訂位時間:</label>
     <input type="datetime-local" id="time" name="time" required>
-    
+    <label for="adults">大人人數:</label>
+    <input type="number" id="adults" name="adults" required min="1">
+    <label for="children">小孩人數:</label>
+    <input type="number" id="children" name="children" required min="0">
+    <div id="childChairContainer" style="display: none;">
+        <label for="childChairs">兒童椅數量:</label>
+        <input type="number" id="childChairs" name="childChairs" min="0">
+    </div>
     <button type="submit">提交</button>
-  </form>
+</form>
 
-  <a href="/view">查看今日訂位</a>
-
-  <script src="script.js"></script>
-  <script>
-    function toggleChildChair() {
-      const childrenCount = document.getElementById('children').value;
-      const childChairContainer = document.getElementById('childChairContainer');
-      childChairContainer.style.display = (childrenCount > 0) ? 'block' : 'none'; // 顯示或隱藏兒童椅欄位
-    }
-  </script>
+<script>
+    document.getElementById('children').addEventListener('input', function() {
+        document.getElementById('childChairContainer').style.display = this.value > 0 ? 'block' : 'none';
+    });
+</script>
 </body>
 </html>
