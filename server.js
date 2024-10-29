@@ -15,14 +15,6 @@ app.post('/bookings', (req, res) => {
   res.status(201).send('訂位已新增');
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
-  });
-
-app.get('/view', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'view.html'));
-});
-
 // 獲取當日訂位
 app.get('/bookings/today', (req, res) => {
   const today = new Date().toISOString().slice(0, 10);
@@ -30,6 +22,16 @@ app.get('/bookings/today', (req, res) => {
   res.json(todayBookings);
 });
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// 新增 /view 路徑提供 view.html
+app.get('/view', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'view.html'));
+});
+
+// 啟動伺服器
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
