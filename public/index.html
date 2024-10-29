@@ -4,6 +4,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
   <title>訂位系統</title>
+  <style>
+    #childChairContainer {
+      display: none; /* 預設隱藏兒童椅欄位 */
+    }
+  </style>
 </head>
 <body>
   <h1>訂位系統</h1>
@@ -12,7 +17,20 @@
     <input type="text" id="name" name="name" required>
     
     <label for="phone">電話:</label>
-    <input type="text" id="phone" name="phone" required>
+    <input type="text" id="phone" name="phone" required
+           pattern="^(09\d{2}-\d{6}|0\d{2}-\d{7}|0\d{1}-\d{8})$"
+           title="請輸入有效的台灣電話號碼格式，例如：09XX-XXXXXX 或 0XX-XXXXXXX">
+    
+    <label for="adults">大人數:</label>
+    <input type="number" id="adults" name="adults" min="1" value="1" required>
+    
+    <label for="children">小孩數:</label>
+    <input type="number" id="children" name="children" min="0" value="0" required onchange="toggleChildChair()">
+    
+    <div id="childChairContainer">
+      <label for="childChairs">兒童椅數量:</label>
+      <input type="number" id="childChairs" name="childChairs" min="0" value="0">
+    </div>
     
     <label for="time">訂位時間:</label>
     <input type="datetime-local" id="time" name="time" required>
@@ -22,6 +40,13 @@
 
   <a href="/view">查看今日訂位</a>
 
-  <script src="script.js"></script> <!-- 確保引入的路徑正確 -->
+  <script src="script.js"></script>
+  <script>
+    function toggleChildChair() {
+      const childrenCount = document.getElementById('children').value;
+      const childChairContainer = document.getElementById('childChairContainer');
+      childChairContainer.style.display = (childrenCount > 0) ? 'block' : 'none'; // 顯示或隱藏兒童椅欄位
+    }
+  </script>
 </body>
 </html>
