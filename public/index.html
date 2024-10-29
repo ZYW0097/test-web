@@ -8,6 +8,10 @@
     #childChairContainer {
       display: none; /* 預設隱藏兒童椅欄位 */
     }
+    #message {
+      margin-top: 20px;
+      color: green; /* 提示訊息的顏色 */
+    }
   </style>
 </head>
 <body>
@@ -24,18 +28,73 @@
     <label for="adults">大人人數:</label>
     <input type="number" id="adults" name="adults" required min="1">
     <label for="children">小孩人數:</label>
-    <input type="number" id="children" name="children" required min="0">
-    <div id="childChairContainer" style="display: none;">
+    <input type="number" id="children" name="children" min="0" value="0"> <!-- 預設為 0 -->
+    <div id="childChairContainer">
         <label for="childChairs">兒童椅數量:</label>
-        <input type="number" id="childChairs" name="childChairs" min="0">
+        <input type="number" id="childChairs" name="childChairs" min="0" value="0"> <!-- 預設為 0 -->
     </div>
     <button type="submit">提交</button>
-</form>
+  </form>
 
-<script>
+  <div id="message"></div> <!-- 提示訊息容器 -->
+
+  <button id="viewBookingsButton" onclick="viewBookings()">查看訂位</button> <!-- 新增的查看訂位按鈕 -->
+
+  <script>
     document.getElementById('children').addEventListener('input', function() {
-        document.getElementById('childChairContainer').style.display = this.value > 0 ? 'block' : 'none';
+        const childChairContainer = document.getElementById('childChairContainer');
+        const childChairsInput = document.getElementById('childChairs');
+
+        if (this.value > 0) {
+            childChairContainer.style.display = 'block'; // 顯示兒童椅數量欄位
+        } else {
+            childChairContainer.style.display = 'none'; // 隱藏兒童椅數量欄位
+            childChairsInput.value = 0; // 將兒童椅數量設置為 0
+        }
     });
-</script>
+
+    document.getElementById('bookingForm').addEventListener('submit', function (e) {
+      e.preventDefault(); // 防止表單的默認提交行為
+
+      const formData = new FormData(this); // 獲取表單數據
+      const data = Object.fromEntries(formData); // 將表單數據轉換為對象
+
+      // 驗證小孩椅數量
+      if (data.children > 0 && data.childChairs <= 0) {
+          alert('如果填寫了兒童椅數量，小孩人數必須大於 0！');
+          return;
+      }
+
+      // 驗證兒童椅數量不大於小孩數量
+      if (data.childChairs > data.children) {
+          alert('兒童椅數量不能大於小孩人數！');
+          return;
+      }
+
+      // 發送 POST 請求到 /book
+      fetch('/book', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json' // 設定請求內容類型為 JSON
+          },
+          body: JSON.stringify(data) // 將數據轉換為 JSON 字符串
+      })
+      .then(response => response.json()) // 解析 JSON 響應
+      .then(data => {
+          console.log('成功:', data);
+          document.getElementById('message').innerText = '訂位成功！'; // 顯示提示訊息
+          this.reset(); // 重置表單
+      })
+      .catch((error) => {
+          console.error('錯誤:', error);
+          document.getElementById('message').innerText = '訂位失敗，請再試一次！'; // 顯示錯誤提示訊息
+      });
+    });
+
+    // 查看訂位按鈕的功能
+    function viewBookings() {
+        window.location.href = '/view'; // 導航到 view.html
+    }
+  </script>
 </body>
 </html>
