@@ -1,37 +1,56 @@
 const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const db = require('./database'); // 引入 database.js
 const app = express();
 const port = process.env.PORT || 3000;
-const path = require('path');
 
-app.use(express.json());
+
 app.use(express.static('public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 let bookings = [];
 
 // 新增訂位
-app.post('/bookings', (req, res) => {
-  const booking = req.body;
-  bookings.push(booking);
-  res.status(201).send('訂位已新增');
-});
+app.post('/book', (req, res) => {
+    const { name, phone, time } = req.body;
+    const query = 'INSERT INTO bookings (name, phone, time) VALUES (?, ?, ?)';
+    
+    db.run(query, [name, phone, time], function (err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ message: '訂位成功!', id: this.lastID });
+    });
+  });
 
 // 獲取當日訂位
-app.get('/bookings/today', (req, res) => {
-  const today = new Date().toISOString().slice(0, 10);
-  const todayBookings = bookings.filter(booking => booking.time.startsWith(today));
-  res.json(todayBookings);
-});
+app.get('/api/bookings', (req, res) => {
+    const query = 'SELECT * FROM bookings';
+    
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json(rows);
+    });
+  });
+
+  process.on('SIGINT', () => {
+    db.close();
+    console.log('Database connection closed.');
+    process.exit(0);
+  });
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+    res.sendFile(__dirname + '/public/index.html');
+  });
 
-// 新增 /view 路徑提供 view.html
 app.get('/view', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'view.html'));
-});
+    res.sendFile(path.join(__dirname, 'public', 'view.html'));
+  });
 
-// 啟動伺服器
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
