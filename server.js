@@ -1,12 +1,12 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { connectDB, Booking } = require('./database'); // 引入連接和 Booking 模型
+const { connectDB, Booking } = require('./database'); // 引入連接和模型
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// 在應用程序啟動時連接到 MongoDB
+// 連接到 MongoDB
 connectDB();
 
 // 中介軟體設定
@@ -17,15 +17,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // 新增訂位
 app.post('/book', (req, res) => {
     const { name, phone, time, adults, children, childChairs } = req.body;
-
-    // 驗證資料
-    if (childChairs > children && children > 0) {
-        return res.status(400).json({ error: '兒童椅數量不能大於小孩數量' });
-    }
-    if (childChairs > 0 && (!children || children <= 0)) {
-        return res.status(400).json({ error: '如果有兒童椅，必須填寫小孩數量' });
-    }
-
     const newBooking = new Booking({ name, phone, time, adults, children, childChairs });
 
     newBooking.save()
