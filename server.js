@@ -14,17 +14,16 @@ let bookings = [];
 
 // 新增訂位
 app.post('/book', (req, res) => {
-    const { name, phone, time } = req.body;
-    const query = 'INSERT INTO bookings (name, phone, time) VALUES (?, ?, ?)';
+    const { name, phone, time, adults, children, childChairs } = req.body;
+    const query = 'INSERT INTO bookings (name, phone, time, adults, children, childChairs) VALUES (?, ?, ?, ?, ?, ?)';
     
-    db.run(query, [name, phone, time], function (err) {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ message: '訂位成功!', id: this.lastID });
+    db.run(query, [name, phone, time, adults, children, childChairs], function (err) {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ message: '訂位成功!', id: this.lastID });
     });
-  });
-
+});
 // 獲取當日訂位
 app.get('/api/bookings', (req, res) => {
     const query = 'SELECT * FROM bookings';
