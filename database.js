@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+mongoose.set('strictQuery', false); // 或 true
+
 // 替換為您的 MongoDB 連接字符串
 const mongoURI = 'mongodb+srv://zywei097:BFiolrXvvk3JMExn@test-web-db.ma336.mongodb.net/?retryWrites=true&w=majority&appName=test-web-db';
 
@@ -18,5 +20,18 @@ const connectDB = async () => {
     }
 };
 
-// 在應用程序啟動時調用連接函數
-connectDB();
+// 訂位 Schema
+const bookingSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    time: { type: Date, required: true },
+    adults: { type: Number, required: true },
+    children: { type: Number, required: true },
+    childChairs: { type: Number, default: 0 }
+});
+
+// 創建 Booking 模型
+const Booking = mongoose.model('Booking', bookingSchema);
+
+// 導出連接函數和模型
+module.exports = { connectDB, Booking };
