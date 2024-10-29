@@ -1,51 +1,21 @@
-const sqlite3 = require('sqlite3').verbose();
-const fs = require('fs');
-const path = require('path');
+const mongoose = require('mongoose');
 
-// 設定資料庫文件的路徑
-const dbPath = path.join(__dirname, 'database.db');
+// 替換為您的 MongoDB 連接字符串
+const mongoURI = 'mongodb+srv://zywei097:<db_password>@test-web-db.ma336.mongodb.net/?retryWrites=true&w=majority&appName=test-web-db';
 
-// 檢查資料庫文件是否存在，若不存在則創建
-const dbExists = fs.existsSync(dbPath);
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error('Could not connect to database:', err.message);
-    } else {
-        console.log('Connected to the database.');
-    }
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Connected to MongoDB.'))
+    .catch(err => console.error('Could not connect to MongoDB:', err));
+
+const bookingSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    time: { type: Date, required: true },
+    adults: { type: Number, required: true },
+    children: { type: Number, required: true },
+    childChairs: { type: Number, default: 0 }
 });
 
-// 若資料庫不存在，則創建 bookings 表
-if (!dbExists) {
-    db.serialize(() => {
-        db.run(`CREATE TABLE IF NOT EXISTS bookings (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            phone TEXT NOT NULL,
-            time TEXT NOT NULL,
-            adults INTEGER NOT NULL,
-            children INTEGER NOT NULL,
-            childChairs INTEGER DEFAULT 0
-        )`, (err) => {
-            if (err) {
-                console.error('Could not create table:', err.message);
-            } else {
-                console.log('Bookings table created.');
-            }
-        });
-    });
-}
+const Booking = mongoose.model('Booking', bookingSchema);
 
-// 關閉資料庫連接（建議在應用程式結束時進行）
-process.on('SIGINT', () => {
-    db.close((err) => {
-        if (err) {
-            console.error('Error closing the database:', err.message);
-        } else {
-            console.log('Database connection closed.');
-        }
-        process.exit(0);
-    });
-});
-
-module.exports = db;
+module.exports = Booking;
