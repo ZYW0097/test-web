@@ -6,11 +6,25 @@ const Booking = require('./database'); // 引入 MongoDB 模型
 const app = express();
 const port = process.env.PORT || 3000;
 
+// 使用 MongoDB Atlas 的連接字符串
+const mongoDB = 'mongodb+srv://zywei097:BFiolrXvvk3JMExn@test-web-db.ma336.mongodb.net/?retryWrites=true&w=majority&appName=test-web-db';
+
+let isConnected = false;
+
+const connectDB = async () => {
+    if (isConnected) return; // 如果已經連接，則不重複連接
+
+    try {
+        await mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
+        isConnected = true; // 更新連接狀態
+        console.log('Connected to MongoDB');
+    } catch (err) {
+        console.error('Could not connect to MongoDB:', err);
+    }
+};
+
 // 連接到 MongoDB
-const mongoDB = 'mongodb://<username>:<password>@localhost:27017/mydatabase'; // 修改為您的 MongoDB URI
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('Could not connect to MongoDB:', err));
+connectDB();
 
 // 中介軟體設定
 app.use(express.static('public'));
