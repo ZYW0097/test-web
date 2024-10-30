@@ -12,7 +12,7 @@ document.getElementById('children').addEventListener('input', function () {
 });
 
 // 提交訂位表單的功能
-document.getElementById('bookinxgForm').addEventListener('submit', function (e) {
+document.getElementById('bookingForm').addEventListener('submit', function (e) { // 確保 ID 正確
     e.preventDefault(); // 防止表單的默認提交行為
 
     const formData = new FormData(this); // 獲取表單數據
