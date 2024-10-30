@@ -27,11 +27,11 @@ app.post('/book', (req, res) => {
         .then(() => res.json({ message: '訂位成功!', id: newBooking._id }))
         .catch(err => {
             console.error('Error saving booking:', err.message); // 打印錯誤
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: '訂位失敗，請稍後再試。' }); // 更通用的錯誤信息
         });
 });
 
-// 獲取當日訂位
+// 獲取所有訂位
 app.get('/api/bookings', (req, res) => {
     Booking.find()
         .then(rows => res.json(rows))
