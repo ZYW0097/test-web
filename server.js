@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose'); // 引入 mongoose
-const { connectDB, Bookings } = require('./database'); // 引入連接函數和模型
+const { connectDB, bookings } = require('./database'); // 引入連接函數和模型
 require('dotenv').config(); // 載入環境變數
 
 const app = express();
@@ -21,7 +21,7 @@ app.post('/book', (req, res) => {
     const { name, phone, time, adults, children, childChairs } = req.body;
     console.log('Received booking:', req.body); // 確認收到的資料
 
-    const newBooking = new Bookings({ name, phone, time, adults, children, childChairs }); // 使用 Bookings
+    const newBooking = new bookings({ name, phone, time, adults, children, childChairs }); // 使用 Bookings
 
     newBooking.save()
         .then(() => res.json({ message: '訂位成功!', id: newBooking._id }))
@@ -33,7 +33,7 @@ app.post('/book', (req, res) => {
 
 // 獲取所有訂位
 app.get('/api/bookings', (req, res) => {
-    Bookings.find() // 使用 Bookings
+    bookings.find() // 使用 Bookings
         .then(rows => res.json(rows))
         .catch(err => res.status(500).json({ error: err.message }));
 });
