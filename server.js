@@ -1,7 +1,9 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { connectDB, Booking } = require('./database'); // 引入連接和模型
+const mongoose = require('mongoose'); // 引入 mongoose
+const { connectDB, Booking } = require('./database'); // 引入連接函數和模型
+require('dotenv').config(); // 載入環境變數
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -17,11 +19,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // 新增訂位
 app.post('/book', (req, res) => {
     const { name, phone, time, adults, children, childChairs } = req.body;
+    console.log('Received booking:', req.body); // 確認收到的資料
+
     const newBooking = new Booking({ name, phone, time, adults, children, childChairs });
 
     newBooking.save()
         .then(() => res.json({ message: '訂位成功!', id: newBooking._id }))
-        .catch(err => res.status(500).json({ error: err.message }));
+        .catch(err => {
+            console.error('Error saving booking:', err.message); // 打印錯誤
+            res.status(500).json({ error: err.message });
+        });
 });
 
 // 獲取當日訂位
