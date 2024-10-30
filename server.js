@@ -19,14 +19,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // 新增訂位
 app.post('/book', (req, res) => {
     const { name, phone, time, adults, children, childChairs } = req.body;
-    console.log('Received booking:', req.body); // 確認收到的資料
+    console.log('Received bookings:', req.body); // 確認收到的資料
 
-    const newbooking = new bookings({ name, phone, time, adults, children, childChairs }); // 使用 Bookings
+    const newbookings = new bookings({ name, phone, time, adults, children, childChairs }); // 使用 Bookings
 
-    newbooking.save()
-        .then(() => res.json({ message: '訂位成功!', id: newbooking._id }))
+    newbookings.save()
+        .then(() => res.json({ message: '訂位成功!', id: newbookings._id }))
         .catch(err => {
-            console.error('Error saving booking:', err.message); // 打印錯誤
+            console.error('Error saving bookings:', err.message); // 打印錯誤
             res.status(500).json({ error: err.message });
         });
 });
