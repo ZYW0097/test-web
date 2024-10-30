@@ -21,7 +21,7 @@ const connectDB = async () => {
 };
 
 // 訂位 Schema
-const bookingsSchema = new mongoose.Schema({
+const bookingSchema = new mongoose.Schema({
     name: { type: String, required: true },
     phone: { type: String, required: true },
     time: { type: Date, required: true },
@@ -31,7 +31,7 @@ const bookingsSchema = new mongoose.Schema({
 });
 
 // 創建 Booking 模型
-const bookings = mongoose.model('bookings', bookingsSchema);
+const bookings = mongoose.model('bookings', bookingSchema);
 
 // 導出連接函數和模型
 module.exports = { connectDB, bookings };
