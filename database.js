@@ -31,7 +31,7 @@ const bookingSchema = new mongoose.Schema({
 });
 
 // 創建 Booking 模型
-const Bookings = mongoose.model('Bookings', bookingSchema);
+const bookings = mongoose.model('bookings', bookingSchema);
 
 // 導出連接函數和模型
-module.exports = { connectDB, Bookings };
+module.exports = { connectDB, bookings };
