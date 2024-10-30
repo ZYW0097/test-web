@@ -14,9 +14,9 @@ const connectDB = async () => {
     try {
         await mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
         isConnected = true; // 更新連接狀態
-        console.log('MongoDB connected successfully');
+        console.log('MongoDB(資料庫)連接成功✅');
     } catch (err) {
-        console.error('Could not connect to MongoDB:', err.message);
+        console.error('MongoDB(資料庫)連接失敗❌:', err.message);
     }
 };
 
@@ -31,7 +31,7 @@ const bookingSchema = new mongoose.Schema({
 });
 
 // 創建 Booking 模型
-const Booking = mongoose.model('Booking', bookingSchema);
+const Bookings = mongoose.model('Bookings', bookingSchema);
 
 // 導出連接函數和模型
-module.exports = { connectDB, Booking };
+module.exports = { connectDB, Bookings };
