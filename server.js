@@ -23,8 +23,8 @@ app.post('/book', (req, res) => {
 
     const newBooking = new bookings({ name, phone, time, adults, children, childChairs }); // 使用 Bookings
 
-    newBooking.save()
-        .then(() => res.json({ message: '訂位成功!', id: newBooking._id }))
+    newbooking.save()
+        .then(() => res.json({ message: '訂位成功!', id: newbooking._id }))
         .catch(err => {
             console.error('Error saving booking:', err.message); // 打印錯誤
             res.status(500).json({ error: err.message });
