@@ -1,3 +1,15 @@
+document.getElementById('children').addEventListener('input', function() {
+    const childChairContainer = document.getElementById('childChairContainer');
+    const childChairsInput = document.getElementById('childChairs');
+
+    if (this.value > 0) {
+        childChairContainer.style.display = 'block'; // 顯示兒童椅數量欄位
+    } else {
+        childChairContainer.style.display = 'none'; // 隱藏兒童椅數量欄位
+        childChairsInput.value = 0; // 將兒童椅數量設置為 0
+    }
+});
+
 document.getElementById('bookingForm').addEventListener('submit', function (e) {
   e.preventDefault(); // 防止表單的默認提交行為
 
@@ -35,3 +47,8 @@ document.getElementById('bookingForm').addEventListener('submit', function (e) {
       document.getElementById('message').innerText = '訂位失敗，請再試一次！'; // 顯示錯誤提示訊息
   });
 });
+
+// 查看訂位按鈕的功能
+function viewBookings() {
+    window.location.href = '/view'; // 導航到 view.html
+}
